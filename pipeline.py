@@ -36,8 +36,8 @@ TABLE_NAME    = "t_68c484885fafa83bbffefd22_t"    # ← your table
 PAGE_SIZE     = 5000                              # rows per page
 
 # ── LLM (Ollama) API ───────────────────────────────────────────────────
-# LLM_API_URL   = "http://ollama.ollama-keda.svc.cluster.local:11434"
-LLM_API_URL   = "http://ollama-keda.mobiusdtaas.ai"          # Ollama API URL
+LLM_API_URL   = "http://ollama.ollama-keda.svc.cluster.local:11434"
+# LLM_API_URL   = "http://ollama-keda.mobiusdtaas.ai"          
 MODEL_NAME    = "gpt-oss:20b"
 
 # ── Output files ───────────────────────────────────────────────────────
