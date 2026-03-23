@@ -22,7 +22,7 @@ PAGE_SIZE     = 5000                              # rows per page
 
 # ── LLM (Ollama) API ───────────────────────────────────────────────────
 # LLM_API_URL   = "http://ollama-keda.mobiusdtaas.ai"
-LLM_API_URL   = "http://ollama.ollama-keda.svc.cluster.local:11434/"
+LLM_API_URL   = "http://ollama.ollama-keda.svc.cluster.local:11434"
 MODEL_NAME    = "gpt-oss:20b"
 
 # ── Output files ───────────────────────────────────────────────────────
