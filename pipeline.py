@@ -211,8 +211,8 @@ def _post_db(session: requests.Session, query: str,
 
 def build_raw_query(table: str, limit: int, offset: int) -> str:
     return (
-        f"SELECT indicator, country_code, Year, "
-        f"indicator_code, value"
+        f"SELECT indicatorId, indicatorDescription, yearCode, "
+        f"countryName, value, countryId "
         f"FROM {table} LIMIT {limit} OFFSET {offset};"
     )
 
