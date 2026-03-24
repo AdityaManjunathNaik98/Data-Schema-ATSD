@@ -211,8 +211,8 @@ def _post_db(session: requests.Session, query: str,
 
 def build_raw_query(table: str, limit: int, offset: int) -> str:
     return (
-        f"SELECT indicatorId, indicatorDescription, yearCode, "
-        f"countryName, value, countryId "
+        f"SELECT indicator, country_code, Year, "
+        f"indicator_code, value"
         f"FROM {table} LIMIT {limit} OFFSET {offset};"
     )
 
@@ -270,35 +270,42 @@ def build_metrics_query(table: str, limit: int, offset: int) -> str:
     """
     return f"""
 SELECT
-    yearCode,
     countryName,
-    indicatorDescription                             AS series,
-    COUNT(value)                                     AS Count,
-    MIN(value)                                       AS Min,
-    MAX(CASE WHEN pct <= 0.05 THEN value END)        AS P5,
-    MAX(CASE WHEN pct <= 0.10 THEN value END)        AS P10,
-    MAX(CASE WHEN pct <= 0.25 THEN value END)        AS P25,
-    AVG(value)                                       AS Mean,
-    MAX(CASE WHEN pct <= 0.50 THEN value END)        AS Median,
-    MAX(CASE WHEN pct <= 0.75 THEN value END)        AS P75,
-    MAX(CASE WHEN pct <= 0.90 THEN value END)        AS P90,
-    MAX(CASE WHEN pct <= 0.95 THEN value END)        AS P95,
-    MAX(value)                                       AS Max,
-    STDDEV(value)                                    AS Std
+    indicatorDescription AS series,
+
+    COUNT(value)                              AS Count,
+    MIN(value)                                AS Min,
+
+    MAX(CASE WHEN pct <= 0.05 THEN value END) AS P5,
+    MAX(CASE WHEN pct <= 0.10 THEN value END) AS P10,
+    MAX(CASE WHEN pct <= 0.25 THEN value END) AS P25,
+
+    AVG(value)                                AS Mean,
+
+    MAX(CASE WHEN pct <= 0.50 THEN value END) AS Median,
+    MAX(CASE WHEN pct <= 0.75 THEN value END) AS P75,
+    MAX(CASE WHEN pct <= 0.90 THEN value END) AS P90,
+    MAX(CASE WHEN pct <= 0.95 THEN value END) AS P95,
+
+    MAX(value)                                AS Max,
+    STDDEV(value)                             AS Std
+
 FROM (
     SELECT
-        yearCode,
         countryName,
         indicatorDescription,
         value,
+
         PERCENT_RANK() OVER (
-            PARTITION BY yearCode, countryName
+            PARTITION BY countryName, indicatorDescription
             ORDER BY value
         ) AS pct
+
     FROM {table}
 ) ranked
-GROUP BY yearCode, countryName, indicatorDescription
-ORDER BY yearCode, countryName, indicatorDescription
+GROUP BY countryName, indicatorDescription
+ORDER BY countryName, indicatorDescription
+
 LIMIT {limit} OFFSET {offset};
 """.strip()
 
